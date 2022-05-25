@@ -35,13 +35,6 @@ class BoardCanvas(tk.Canvas):
         self.X_score = 0
         self.O_score = 0
 
-    def new_game(self):
-        self.delete("all")
-        self.draw_gameBoard()
-        self.gameBoard = GameBoard()
-        self.boardSearcher = BoardSearcher()
-        self.boardSearcher.board = self.gameBoard.board()
-
     def draw_gameBoard(self):
         """Lập bảng trò chơi."""
 
@@ -100,6 +93,19 @@ class BoardCanvas(tk.Canvas):
         # 	self.create_oval(start_pixel_x, start_pixel_y,
         # 					end_pixel_x, end_pixel_y, fill='O')
         # 					self.create_polygon()
+        
+    def is_grid_occupied(self, row, col):
+        if self.gameBoard.board()[row][col] != 0:
+            return True
+        else:
+            return False
+        
+    def new_game(self):
+        self.delete("all")
+        self.draw_gameBoard()
+        self.gameBoard = GameBoard()
+        self.boardSearcher = BoardSearcher()
+        self.boardSearcher.board = self.gameBoard.board()
 
     def gameLoop(self, event):
         """
@@ -116,14 +122,13 @@ class BoardCanvas(tk.Canvas):
                 # Lượt đi của người chơi, quân cờ của người chơi là O
                 print('Your turn now...\n')
                 self.turn = 1
-                invalid_pos = True
                 row, col = self.convert_grid_to_logical_position(
                     [event.x, event.y])
-                self.draw_move(row, col)
-                if invalid_pos:
+                if self.is_grid_occupied(row, col):
                     print('Invalid position.\n')
-                    break
+                    return 0
                 else:
+                    self.draw_move(row, col)
                     break
             # Đặt quân cờ O sau khi xác định vị trí
             self.gameBoard.board()[row][col] = 1
