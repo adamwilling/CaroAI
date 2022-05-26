@@ -143,33 +143,33 @@ class BoardEvaluator(object):
                         if ch in check:
                             count[stone][ch] += 1
 
-        # trả về điểm nếu có 5 quân thằng hàng
-        X = 1
-        O = 2
-        # current turn is O
+        # Trả về điểm nếu có 5 quân thằng hàng
+        O = 1
+        X = 2
+        # Lượt đi hiện tại là O
         if turn == O:
             if count[X][five]:
                 return -9999
             elif count[O][five]:
                 return 9999
-        # current turn is X
+        # Lượt đi hiện tại là X
         else:
             if count[O][five]:
                 return -9999
             elif count[X][five]:
                 return 9999
 
-        # if there exist 2 chongsi, it's equivalent to 1 huosi
+        # Nếu tồn tại 2 chongsi, nó tương đương với 1 huosi
         if count[O][cFour] >= 2:
             count[O][four] += 1
         if count[X][cFour] >= 2:
             count[X][four] += 1
 
-        # return score for specific situations
+        # Trả về điểm cho các trường hợp cụ thể
         wvalue = 0
         bvalue = 0
         win = 0
-        # current turn is O
+        # Lượt đi hiện tại là O
         if turn == O:
             if count[O][four] > 0:			# O huosi
                 return 9990
@@ -181,17 +181,17 @@ class BoardEvaluator(object):
                 return -9960
             if count[O][three] and count[X][cFour] == 0:  # O huosan & no X chongsi
                 return 9950
-            if (count[X][three] > 1 and  # X >1 huosan &
+            if (count[X][three] > 1 and  # X > 1 huosan &
                     count[O][cFour] == 0 and  # no O chongsi &
                     count[O][three] == 0 and  # no O huosan &
                     count[O][cThree] == 0):		# no O chongsan
                 return -9940
 
-            if count[O][three] > 1:			# O >1 huosan
+            if count[O][three] > 1:			# O > 1 huosan
                 wvalue += 2000
             elif count[O][three]:			# O 1 huosan
                 wvalue += 200
-            if count[X][three] > 1:			# X >1 huosan
+            if count[X][three] > 1:			# X > 1 huosan
                 bvalue += 500
             elif count[X][three]:			# X 1 huosan
                 bvalue += 100
@@ -249,12 +249,11 @@ class BoardEvaluator(object):
             if count[O][cTwo]:						# O chong'er
                 wvalue += count[O][cTwo]
 
-        # include weight for each intersection
-        # add weight of 7 to the center, 6 to the outer square, then
-        # 5, 4, 3, 2, 1, at last 0 to the outermost square.
+        # Bao gồm trọng số cho mỗi ô
+        # Thêm trọng số của 7 vào tâm, 6 vào hình vuông bên ngoài, sau đó 5, 4, 3, 2, 1, từ 0 đến ô vuông ngoài cùng.
         wc = 0
         bc = 0
-        # for each intersection with a stone, add weight
+        # Đối với mỗi giao điểm với một quân cờ, thêm trọng lượng
         for i in range(15):
             for j in range(15):
                 stone = board[i][j]
@@ -263,11 +262,11 @@ class BoardEvaluator(object):
                         wc += self.POS[i][j]
                     else:
                         bc += self.POS[i][j]
-        # add total weight to total score
+        # Thêm tổng trọng số vào tổng điểm
         wvalue += wc
         bvalue += bc
 
-        # return score differnece between players
+        # Trả về điểm khác nhau giữa các người chơi
         if turn == O:
             return wvalue - bvalue
 
@@ -280,7 +279,7 @@ class BoardEvaluator(object):
         result = self.result
         record = self.record
         unanalyzed = self.unanalyzed
-        # add each intersection in a row to line
+        # Thêm từng giao điểm liên tiếp vào dòng
         for x in range(15):
             line[x] = board[i][x]
         self.analysis_line(line, result, 15, j)
@@ -350,7 +349,7 @@ class BoardEvaluator(object):
                 record[y - s][x + s][3] = result[s]
         return record[i][j][3]
 
-    # Phân tích một dòng, tìm ra các tình huống khác nhau (tức là năm, bốn, ba, v.v.)
+    # Phân tích một dòng, tìm ra các trường hợp khác nhau (tức là năm, bốn, ba, v.v.)
 
     def analysis_line(self, line, record, num, pos):
         unanalyzed = self.unanalyzed

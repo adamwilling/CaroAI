@@ -1,3 +1,8 @@
+"""
+    Tài liệu tham khảo: 
+    1. Giao diện cơ bản: https://github.com/aqeelanwar/Tic-Tac-Toe
+"""
+
 import tkinter as tk
 import numpy as np
 from game_board import GameBoard
@@ -84,15 +89,15 @@ class BoardCanvas(tk.Canvas):
             Tham số: row, col (vị trí của một ô)
         """
 
-        # logical_position = np.array([row, col])
-        # grid_position = self.convert_logical_to_grid_position(logical_position)
+        logical_position = np.array([row, col])
+        grid_position = self.convert_logical_to_grid_position(logical_position)
 
-        # if self.turn == 1:
-        # 	self.create_polygon
-        # elif self.turn == 2:
-        # 	self.create_oval(start_pixel_x, start_pixel_y,
-        # 					end_pixel_x, end_pixel_y, fill='O')
-        # 					self.create_polygon()
+        self.create_line(grid_position[0] - self.symbol_size, grid_position[1] - self.symbol_size,
+                            grid_position[0] + self.symbol_size, grid_position[1] + self.symbol_size, width=self.symbol_thickness,
+                            fill=self.symbol_X_color)
+        self.create_line(grid_position[0] - self.symbol_size, grid_position[1] + self.symbol_size,
+                            grid_position[0] + self.symbol_size, grid_position[1] - self.symbol_size, width=self.symbol_thickness,
+                            fill=self.symbol_X_color)
         
     def is_grid_occupied(self, row, col):
         if self.gameBoard.board()[row][col] != 0:
@@ -168,11 +173,11 @@ class BoardCanvas(tk.Canvas):
             print('AI has moved to {}\n'.format(coord))
             # Đặt một quân cờ X sau khi xác định vị trí.
             self.gameBoard.board()[row][col] = 2
-            self.draw_move(row, col)
+            self.draw_prev_stone(row, col)
             if self.prev_exist == False:
                 self.prev_exist = True
             else:
-                self.draw_prev_stone(self.prev_row, self.prev_col)
+                self.draw_move(self.prev_row, self.prev_col)
             self.prev_row, self.prev_col = row, col
             self.gameBoard.show()
             print('\n')
